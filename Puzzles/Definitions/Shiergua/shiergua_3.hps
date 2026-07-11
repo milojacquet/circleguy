@@ -1,0 +1,38 @@
+add_puzzle(
+    name = "Shiergua-3",
+    authors = ["Milo Jacquet"],
+    scramble = 1500,
+    build = fn() {
+        r = sqrt(16 - 9*sqrt(3))
+        pr = point(1/2, -sqrt(3)/6)
+        pl = point(-1/2, -sqrt(3)/6)
+        pu = point(0, sqrt(3)/3)
+        cr = circle(pr, r)
+        cl = circle(pl, r)
+        cu = circle(pu, r)
+        tr = turn(cr, 12)
+        tl = turn(cl, 12)
+        tu = turn(cu, 12)
+        add_circles([cr, cl, cu])
+        add_turns([tr, tl, tu], ["R", "L", "U"])
+        for sym in turn(circle(0, 0, 5), 3).powers() {
+            turn(sym)
+            for trpow in tr.mult(2).powers() {
+                turn(trpow)
+                cut([tl])
+                cut([tr, tl])
+                cut([cr], [tl, tr])
+                cut([cr], [tl.mult(-1), tr])
+                undo()
+            }
+            undo_all()
+        }
+        color([cl, ~cr, ~cu], red)
+        color([~cl, cr, ~cu], green)
+        color([~cl, ~cr, cu], blue)
+        color([cl, cr, cu], white)
+        color([cl, ~cr, cu], magenta)
+        color([~cl, cr, cu], cyan)
+        color([cl, cr, ~cu], yellow)
+    },
+)
